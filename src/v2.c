@@ -6,7 +6,7 @@
 /*   By: ifadhli <ifadhli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 18:45:28 by ifadhli           #+#    #+#             */
-/*   Updated: 2025/05/02 00:46:17 by ifadhli          ###   ########.fr       */
+/*   Updated: 2025/05/02 01:52:33 by ifadhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,14 @@ void	first_child(t_cmd *cmd)
 	dup2(cmd->fd[1], STDOUT_FILENO);
 	close(cmd->fd[1]);
 	file = get_cmd(cmd, commande[0]);
+	if (!file)
+	{
+		free_tab(commande);
+		exit(EXIT_FAILURE);	
+	}
 	execve(file, commande, cmd->env);
-	perror("Execve Failure1");
-	free_tab(commande);
+	// perror("Execve Failure1");
+	free(file);
 	exit(EXIT_FAILURE);
 }
 
@@ -57,7 +62,7 @@ void	second_child(t_cmd *cmd)
 	file = get_cmd(cmd, commande[0]);
 	if (file == 0)
 	{
-		free(file);	
+		free_tab(commande);	
 		exit(EXIT_FAILURE);
 	}
 	close(cmd->fd[1]);
@@ -67,7 +72,9 @@ void	second_child(t_cmd *cmd)
 	dup2(outfile, STDOUT_FILENO);
 	close(outfile);
 	execve(file, commande, cmd->env);
-	perror("Execve Failure2");
+	// perror("Execve Failure2");
+	free(file);
 	free_tab(commande);
 	exit(EXIT_FAILURE);
 }
+

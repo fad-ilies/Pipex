@@ -6,7 +6,7 @@
 /*   By: ifadhli <ifadhli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 16:36:22 by ifadhli           #+#    #+#             */
-/*   Updated: 2025/05/02 00:13:03 by ifadhli          ###   ########.fr       */
+/*   Updated: 2025/05/02 01:24:06 by ifadhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,11 @@ char	**get_path(t_cmd *cmd)
 		i++;
 	}
 	tab = ft_split(str + 5, ':');
-	// if (!tab)
-	// 	free_tab(tab);
+	if (!tab)
+	{
+		free_tab(tab);
+		return (NULL);
+	}
 	return (tab);
 }
 
