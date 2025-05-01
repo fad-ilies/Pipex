@@ -6,64 +6,68 @@
 /*   By: ifadhli <ifadhli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 18:45:28 by ifadhli           #+#    #+#             */
-/*   Updated: 2025/04/30 00:14:30 by ifadhli          ###   ########.fr       */
+/*   Updated: 2025/05/02 00:46:17 by ifadhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	create_child(t_cmd *cmd)
+void	first_child(t_cmd *cmd)
 {
-	int		status;
-	pid_t	pid;
-	char	**tab;
+	int		infile;
+	char	*file = NULL;
+	char	**commande;
+	int		i;
+	int		j;
 
-	tab = cmd->av;
-	cmd->pathname = get_cmd(cmd);
-	pid = fork();
-	printf("pid == %d\n", pid);
-	if (pid == -1)
-		perror("fork failure");
-	else if (pid == 0)
+	i = 2;
+	j = 0;
+	commande = ft_split(cmd->av[i], ' ');
+	if (commande)
 	{
-		printf("tour2\n");
-		printf("cmd to find == %s\n", cmd->pathname);
-		printf("tab[1] == %s\n", tab[1]);
-		if (execve(cmd->pathname, &tab[1], cmd->env) == -1)
-			perror("execve failure");
+		free_tab(commande);
+		exit(EXIT_FAILURE);
 	}
-	else
-	{
-		printf("tour 1\n");
-		waitpid(pid, &status, 0);
-	}
+	close(cmd->fd[0]);
+	infile = open(cmd->infile, O_RDONLY);
+	dup2(infile, STDIN_FILENO);
+	close(infile);
+	dup2(cmd->fd[1], STDOUT_FILENO);
+	close(cmd->fd[1]);
+	file = get_cmd(cmd, commande[0]);
+	execve(file, commande, cmd->env);
+	perror("Execve Failure1");
+	free_tab(commande);
+	exit(EXIT_FAILURE);
 }
 
-void	create_pipe(int fd[2])
+void	second_child(t_cmd *cmd)
 {
-	close(fd[0]);
-	dup2(fd[1], STDOUT_FILENO);
-	write(STDOUT_FILENO, "Hello Pipe\n", 11);
-	close(fd[1]);
-	exit(EXIT_SUCCESS);
-}
+	int		outfile;
+	char	*file;
+	char	**commande;
+	int		i;
+	int		j;
 
-void	pipe_dad(void)
-{
-	int		fd[2];
-	int		status;
-	pid_t	pid;
-	char	c;
-
-	pid = fork();
-	if (pid == 0)
-		create_pipe(fd);
-	else
+	i = 3;
+	j = 0;
+	commande = ft_split(cmd->av[i], ' ');
+	if (commande == 0)
+		exit(EXIT_FAILURE);
+	file = get_cmd(cmd, commande[0]);
+	if (file == 0)
 	{
-		close(fd[1]);
-		while (read(fd[0], &c, 1) > 0)
-			write(STDOUT_FILENO, &c, 1);
-		close(fd[0]);
-		waitpid(pid, &status, 0);
+		free(file);	
+		exit(EXIT_FAILURE);
 	}
+	close(cmd->fd[1]);
+	outfile = open(cmd->outfile, O_WRONLY);
+	dup2(cmd->fd[0], STDIN_FILENO);
+	close(cmd->fd[0]);
+	dup2(outfile, STDOUT_FILENO);
+	close(outfile);
+	execve(file, commande, cmd->env);
+	perror("Execve Failure2");
+	free_tab(commande);
+	exit(EXIT_FAILURE);
 }

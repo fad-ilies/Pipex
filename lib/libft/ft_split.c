@@ -3,15 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ifadhli <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: ifadhli <ifadhli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 02:33:36 by ifadhli           #+#    #+#             */
-/*   Updated: 2024/11/20 03:23:46 by ifadhli          ###   ########.fr       */
+/*   Updated: 2025/05/02 00:43:43 by ifadhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "libft.h"
+#include "libft.h"
+
 
 static	int	ft_countword(const char *str, char c)
 {

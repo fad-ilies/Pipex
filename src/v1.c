@@ -6,7 +6,7 @@
 /*   By: ifadhli <ifadhli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 16:36:22 by ifadhli           #+#    #+#             */
-/*   Updated: 2025/04/29 21:55:52 by ifadhli          ###   ########.fr       */
+/*   Updated: 2025/05/02 00:13:03 by ifadhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,29 +28,37 @@ char	**get_path(t_cmd *cmd)
 		i++;
 	}
 	tab = ft_split(str + 5, ':');
+	// if (!tab)
+	// 	free_tab(tab);
 	return (tab);
 }
 
-char	*get_cmd(t_cmd *cmd)
+char	*get_cmd(t_cmd *cmd, char *s)
 {
 	int		i;
 	int		j;
 	char	**str;
-	char	*pathname;
+	char	*path;
 
 	i = 1;
 	str = get_path(cmd);
 	if (!str)
-		return(NULL);
+		return(perror("str"), NULL);
 	j = 0;
 	while (str[j])
 	{
-		pathname = ft_strjoin2(str[j], cmd->av[i]);
-		if (access(pathname, F_OK | X_OK) == 0)
-			return (pathname);
+		path = ft_strjoin2(str[j], s);
+		if (path)
+		{
+			if (access(path, F_OK | X_OK) == 0)
+			{
+				free_tab(str);
+				return (path);
+			}
+			free(path);
+		}
 		j++;
 	}
-	perror(cmd->av[i]);	
-	return (NULL);
+	return (free_tab(str), perror(s), NULL);
 }
 
