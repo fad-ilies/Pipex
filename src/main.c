@@ -6,7 +6,7 @@
 /*   By: ifadhli <ifadhli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 20:29:31 by ifadhli           #+#    #+#             */
-/*   Updated: 2025/05/02 16:27:54 by ifadhli          ###   ########.fr       */
+/*   Updated: 2025/05/03 01:04:36 by ifadhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ int	main(int ac, char **av, char **env)
 	i = 0;
 	cmd = init(ac, av, env);
 	if (pipe(cmd.fd) == -1)
+	{
+		perror("pipe ko");
 		exit(EXIT_FAILURE);
+	}
 	child1 = fork();
 	if (child1 == 0)
 		first_child(&cmd);
