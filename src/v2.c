@@ -6,44 +6,61 @@
 /*   By: ifadhli <ifadhli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 18:45:28 by ifadhli           #+#    #+#             */
-/*   Updated: 2025/05/02 01:52:33 by ifadhli          ###   ########.fr       */
+/*   Updated: 2025/05/02 02:12:44 by ifadhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+void	child1_if(t_cmd *cmd, int *infile)
+{
+	close(cmd->fd[0]);
+	*infile = open(cmd->infile, O_RDONLY);
+	if (*infile < 0)
+		exit(EXIT_FAILURE);
+	dup2(*infile, STDIN_FILENO);
+	dup2(cmd->fd[1], STDOUT_FILENO);
+	close(*infile);
+	close(cmd->fd[1]);
+}
 void	first_child(t_cmd *cmd)
 {
 	int		infile;
-	char	*file = NULL;
+	char	*file;
 	char	**commande;
 	int		i;
-	int		j;
 
+	file = NULL;
 	i = 2;
-	j = 0;
 	commande = ft_split(cmd->av[i], ' ');
 	if (commande)
 	{
 		free_tab(commande);
 		exit(EXIT_FAILURE);
 	}
-	close(cmd->fd[0]);
-	infile = open(cmd->infile, O_RDONLY);
-	dup2(infile, STDIN_FILENO);
-	close(infile);
-	dup2(cmd->fd[1], STDOUT_FILENO);
-	close(cmd->fd[1]);
 	file = get_cmd(cmd, commande[0]);
 	if (!file)
 	{
 		free_tab(commande);
-		exit(EXIT_FAILURE);	
+		exit(EXIT_FAILURE);
 	}
+	child1_if(cmd, &infile);
 	execve(file, commande, cmd->env);
-	// perror("Execve Failure1");
+	perror("Execve Failure1");
 	free(file);
 	exit(EXIT_FAILURE);
+}
+
+void	child2_of(t_cmd *cmd, int *outfile)
+{
+	close(cmd->fd[1]);
+	*outfile = open(cmd->outfile, O_WRONLY);
+	if (outfile < 0)
+		exit(EXIT_FAILURE);
+	dup2(cmd->fd[0], STDIN_FILENO);
+	close(cmd->fd[0]);
+	dup2(*outfile, STDOUT_FILENO);
+	close(*outfile);
 }
 
 void	second_child(t_cmd *cmd)
@@ -52,29 +69,22 @@ void	second_child(t_cmd *cmd)
 	char	*file;
 	char	**commande;
 	int		i;
-	int		j;
 
 	i = 3;
-	j = 0;
 	commande = ft_split(cmd->av[i], ' ');
 	if (commande == 0)
 		exit(EXIT_FAILURE);
 	file = get_cmd(cmd, commande[0]);
 	if (file == 0)
 	{
-		free_tab(commande);	
+		free_tab(commande);
 		exit(EXIT_FAILURE);
 	}
 	close(cmd->fd[1]);
-	outfile = open(cmd->outfile, O_WRONLY);
-	dup2(cmd->fd[0], STDIN_FILENO);
-	close(cmd->fd[0]);
-	dup2(outfile, STDOUT_FILENO);
-	close(outfile);
+	child2_of(cmd, &outfile);
 	execve(file, commande, cmd->env);
-	// perror("Execve Failure2");
+	perror("Execve Failure2");
 	free(file);
 	free_tab(commande);
 	exit(EXIT_FAILURE);
 }
-
