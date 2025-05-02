@@ -6,7 +6,7 @@
 /*   By: ifadhli <ifadhli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 16:36:22 by ifadhli           #+#    #+#             */
-/*   Updated: 2025/05/02 02:17:24 by ifadhli          ###   ########.fr       */
+/*   Updated: 2025/05/02 16:47:55 by ifadhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,15 @@ char	**get_path(t_cmd *cmd)
 
 	i = 0;
 	path = "PATH=";
+	str = NULL;
 	while (cmd->env[i])
 	{
 		if (ft_strncmp(cmd->env[i], path, 5) == 0)
 			str = cmd->env[i];
 		i++;
 	}
+	if (!str)
+		return (perror("PATH= not in env"), NULL);
 	tab = ft_split(str + 5, ':');
 	if (!tab)
 	{

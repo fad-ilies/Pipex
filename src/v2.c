@@ -6,7 +6,7 @@
 /*   By: ifadhli <ifadhli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 18:45:28 by ifadhli           #+#    #+#             */
-/*   Updated: 2025/05/02 02:18:07 by ifadhli          ###   ########.fr       */
+/*   Updated: 2025/05/02 16:59:51 by ifadhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,14 @@ void	child1_if(t_cmd *cmd, int *infile)
 	close(cmd->fd[0]);
 	*infile = open(cmd->infile, O_RDONLY);
 	if (*infile < 0)
+	{
+		ft_putstr_fd("infile error", 2);
 		exit(EXIT_FAILURE);
-	dup2(*infile, STDIN_FILENO);
-	dup2(cmd->fd[1], STDOUT_FILENO);
+	}
+	if (dup2(*infile, STDIN_FILENO) == -1)
+		ft_putstr_fd("dup2 inpute pipe error", 2);
+	if (dup2(cmd->fd[1], STDOUT_FILENO) == -1)
+		ft_putstr_fd("dup2 outpute pipe error", 2);
 	close(*infile);
 	close(cmd->fd[1]);
 }
@@ -29,12 +34,12 @@ void	first_child(t_cmd *cmd)
 	int		infile;
 	char	*file;
 	char	**commande;
-	int		i;
 
 	file = NULL;
-	i = 2;
-	commande = ft_split(cmd->av[i], ' ');
-	if (commande)
+	commande = ft_split(cmd->av[2], ' ');
+	if (!commande)
+		exit(EXIT_FAILURE);
+	if (!commande[0])
 	{
 		free_tab(commande);
 		exit(EXIT_FAILURE);
@@ -55,12 +60,17 @@ void	first_child(t_cmd *cmd)
 void	child2_of(t_cmd *cmd, int *outfile)
 {
 	close(cmd->fd[1]);
-	*outfile = open(cmd->outfile, O_WRONLY);
-	if (outfile < 0)
+	*outfile = open(cmd->outfile, O_CREAT | O_WRONLY | O_TRUNC, 0664);
+	if (*outfile < 0)
+	{
+		ft_putstr_fd("outfile error", 2);
 		exit(EXIT_FAILURE);
-	dup2(cmd->fd[0], STDIN_FILENO);
+	}
+	if (dup2(cmd->fd[0], STDIN_FILENO) == -1)
+		ft_putstr_fd("dup2 inpute pipe error", 2);
 	close(cmd->fd[0]);
-	dup2(*outfile, STDOUT_FILENO);
+	if (dup2(*outfile, STDOUT_FILENO) == -1)
+		ft_putstr_fd("dup2 outpute pipe error", 2);
 	close(*outfile);
 }
 
@@ -73,10 +83,10 @@ void	second_child(t_cmd *cmd)
 
 	i = 3;
 	commande = ft_split(cmd->av[i], ' ');
-	if (commande == 0)
+	if (!commande)
 		exit(EXIT_FAILURE);
 	file = get_cmd(cmd, commande[0]);
-	if (file == 0)
+	if (!file)
 	{
 		free_tab(commande);
 		exit(EXIT_FAILURE);
