@@ -6,7 +6,7 @@
 /*   By: ifadhli <ifadhli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 20:26:01 by ifadhli           #+#    #+#             */
-/*   Updated: 2025/05/02 02:14:00 by ifadhli          ###   ########.fr       */
+/*   Updated: 2025/05/02 02:19:04 by ifadhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,6 @@ void		first_child(t_cmd *cmd);
 void		free_tab(char **str);
 void		parse_cmd(t_cmd *cmd, char *s);
 void		child1_if(t_cmd *cmd, int *infile);
-void	child2_of(t_cmd *cmd, int *outfile);
+void		child2_of(t_cmd *cmd, int *outfile);
 
 #endif

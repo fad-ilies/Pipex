@@ -6,7 +6,7 @@
 /*   By: ifadhli <ifadhli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 16:38:03 by ifadhli           #+#    #+#             */
-/*   Updated: 2025/05/01 23:47:16 by ifadhli          ###   ########.fr       */
+/*   Updated: 2025/05/02 02:18:48 by ifadhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	*ft_strjoin2(char const *s1, char const *s2)
 
 void	free_tab(char **str)
 {
-	int i;
+	int		i;
 
 	i = 0;
 	if (!str)

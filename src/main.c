@@ -6,7 +6,7 @@
 /*   By: ifadhli <ifadhli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 20:29:31 by ifadhli           #+#    #+#             */
-/*   Updated: 2025/05/02 00:33:44 by ifadhli          ###   ########.fr       */
+/*   Updated: 2025/05/02 02:16:44 by ifadhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,19 @@ t_cmd	init(int ac, char **av, char **env)
 int	main(int ac, char **av, char **env)
 {
 	t_cmd	cmd;
-	int		i;		
-	
+	int		i;
+	pid_t	child1;
+	pid_t	child2;
+
 	(void)ac;
 	i = 0;
-
 	cmd = init(ac, av, env);
 	if (pipe(cmd.fd) == -1)
 		exit(EXIT_FAILURE);
-	pid_t child1 = fork();
+	child1 = fork();
 	if (child1 == 0)
 		first_child(&cmd);
-	pid_t child2 = fork();
+	child2 = fork();
 	if (child2 == 0)
 		second_child(&cmd);
 	close(cmd.fd[0]);

@@ -6,7 +6,7 @@
 /*   By: ifadhli <ifadhli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 18:45:28 by ifadhli           #+#    #+#             */
-/*   Updated: 2025/05/02 02:12:44 by ifadhli          ###   ########.fr       */
+/*   Updated: 2025/05/02 02:18:07 by ifadhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	child1_if(t_cmd *cmd, int *infile)
 	close(*infile);
 	close(cmd->fd[1]);
 }
+
 void	first_child(t_cmd *cmd)
 {
 	int		infile;
