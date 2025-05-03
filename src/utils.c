@@ -6,7 +6,7 @@
 /*   By: ifadhli <ifadhli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 16:38:03 by ifadhli           #+#    #+#             */
-/*   Updated: 2025/05/02 02:18:48 by ifadhli          ###   ########.fr       */
+/*   Updated: 2025/05/03 19:08:26 by ifadhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,26 +39,6 @@ char	*ft_strjoin2(char const *s1, char const *s2)
 	return (new_str);
 }
 
-// char	*ft_strjoin(char const *s1, char const *s2)
-// {
-// 	size_t		len1;
-// 	size_t		len2;
-// 	char		*ptr;
-// 	int			i;
-
-// 	i = 0;
-// 	if (!s1 || !s2)
-// 		return (NULL);
-// 	len1 = ft_strlen(s1);
-// 	len2 = ft_strlen(s2);
-// 	ptr = malloc(sizeof(char) * (len1 + len2 + 2));
-// 	if (!ptr)
-// 		return (NULL);
-// 	ft_strlcpy(ptr, s1, len1 + len2 + 1);
-// 	ptr[i++] = '/';
-// 	ft_strlcat(ptr, s2, len1 + len2 + 1);
-// 	return (ptr);
-// }
 
 void	free_tab(char **str)
 {
