@@ -6,7 +6,7 @@
 /*   By: ifadhli <ifadhli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 20:26:01 by ifadhli           #+#    #+#             */
-/*   Updated: 2025/05/03 19:03:42 by ifadhli          ###   ########.fr       */
+/*   Updated: 2025/05/05 01:19:21 by ifadhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,12 @@ typedef struct s_cmd
 	pid_t	*pid;
 	int		len;
 	int		fd[2];
+	int		prev;
+	int		next;
+	// nombre de commande
 }			t_cmd;
+
+// i = 0 ++i jusqu'a derniere commande faire la premiere fonction
 
 char		*ft_strjoin2(char const *s1, char const *s2);
 char		**get_path(t_cmd *cmd);
@@ -42,5 +47,8 @@ void		free_tab(char **str);
 void		parse_cmd(t_cmd *cmd, char *s);
 void		child1_if(t_cmd *cmd);
 void		child2_of(t_cmd *cmd);
+void		check_mid_fd(t_cmd *cmd);
+void		mid_child(t_cmd *cmd, char *mid_cmd);
+t_cmd		init(int ac, char **av, char **env);
 
 #endif

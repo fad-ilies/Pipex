@@ -6,7 +6,7 @@
 /*   By: ifadhli <ifadhli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 16:36:22 by ifadhli           #+#    #+#             */
-/*   Updated: 2025/05/02 16:47:55 by ifadhli          ###   ########.fr       */
+/*   Updated: 2025/05/04 00:56:06 by ifadhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,20 @@
 char	**get_path(t_cmd *cmd)
 {
 	int		i;
-	char	*str;
 	char	*path;
 	char	**tab;
 
 	i = 0;
-	path = "PATH=";
-	str = NULL;
-	while (cmd->env[i])
+	path = NULL;
+	while (cmd->env && cmd->env[i])
 	{
-		if (ft_strncmp(cmd->env[i], path, 5) == 0)
-			str = cmd->env[i];
+		if (ft_strncmp(cmd->env[i], "PATH=", 5) == 0)
+			path = cmd->env[i];
 		i++;
 	}
-	if (!str)
-		return (perror("PATH= not in env"), NULL);
-	tab = ft_split(str + 5, ':');
+	if (!path)
+		return (NULL);
+	tab = ft_split(path + 5, ':');
 	if (!tab)
 	{
 		free_tab(tab);
@@ -43,27 +41,26 @@ char	*get_cmd(t_cmd *cmd, char *s)
 {
 	int		i;
 	int		j;
-	char	**str;
+	char	**env_path;
 	char	*path;
 
 	i = 1;
-	str = get_path(cmd);
-	if (!str)
-		return (perror("str"), NULL);
+	env_path = get_path(cmd);
+	if (!env_path || !*env_path)
+		return (ft_putstr_fd("PATH not found\n", STDERR_FILENO), NULL);
+	if (!s || !*s)
+		return (free_tab(env_path), ft_putstr_fd("Command not found\n", STDERR_FILENO), NULL);
 	j = 0;
-	while (str[j])
+	while (env_path[j])
 	{
-		path = ft_strjoin2(str[j], s);
+		path = ft_strjoin2(env_path[j], s);
 		if (path)
 		{
 			if (access(path, F_OK | X_OK) == 0)
-			{
-				free_tab(str);
-				return (path);
-			}
+				return (free_tab(env_path), path);
 			free(path);
 		}
 		j++;
 	}
-	return (free_tab(str), perror(s), NULL);
+	return (free_tab(env_path), perror(s), NULL);
 }

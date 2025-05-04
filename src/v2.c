@@ -6,7 +6,7 @@
 /*   By: ifadhli <ifadhli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 18:45:28 by ifadhli           #+#    #+#             */
-/*   Updated: 2025/05/03 19:41:04 by ifadhli          ###   ########.fr       */
+/*   Updated: 2025/05/05 01:23:31 by ifadhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,22 @@ void	child1_if(t_cmd *cmd)
 {
 	int		infile;
 	
-	close(cmd->fd[0]);
 	infile = open(cmd->infile, O_RDONLY);
 	if (infile < 0)
 	{
-		ft_putstr_fd("infile error", 2);
+		ft_putstr_fd("Infile error\n", 2);
+		close(cmd->fd[1]);
+		
 		exit(EXIT_FAILURE);
 	}
 	if (dup2(infile, STDIN_FILENO) == -1)
 	{
-		ft_putstr_fd("dup2 inpute pipe error", 2);
+		ft_putstr_fd("dup2 inpute pipe error\n", 2);
 		exit(EXIT_FAILURE);
 	}
 	if (dup2(cmd->fd[1], STDOUT_FILENO) == -1)
 	{
-		ft_putstr_fd("dup2 outpute pipe error", 2);
+		ft_putstr_fd("dup2 outpute pipe error\n", 2);
 		exit(EXIT_FAILURE);
 	}
 	close(infile);
@@ -43,6 +44,7 @@ void	first_child(t_cmd *cmd)
 	char	**commande;
 	
 	close(cmd->fd[0]);
+	child1_if(cmd);
 	commande = ft_split(cmd->av[2], ' ');
 	file = get_cmd(cmd, commande[0]);
 	if (!commande || !file)
@@ -51,9 +53,9 @@ void	first_child(t_cmd *cmd)
 		close(cmd->fd[1]);
 		exit(EXIT_FAILURE);
 	}
-	child1_if(cmd);
 	execve(file, commande, cmd->env);
-	perror("Execve Failure1");
+	perror("execve failure");
+	ft_putstr_fd("Command not found", 2);
 	free(file);
 	exit(EXIT_FAILURE);
 }
@@ -62,22 +64,22 @@ void	child2_of(t_cmd *cmd)
 {
 	int		outfile;
 	
-	close(cmd->fd[1]);
 	outfile = open(cmd->outfile, O_CREAT | O_WRONLY | O_TRUNC, 0664);
 	if (outfile < 0)
 	{
-		ft_putstr_fd("outfile error", 2);
+		ft_putstr_fd("outfile error\n", 2);
+		close(cmd->fd[0]);
 		exit(EXIT_FAILURE);
 	}
 	if (dup2(cmd->fd[0], STDIN_FILENO) == -1)
 	{
-		ft_putstr_fd("dup2 inpute pipe error", 2);
+		ft_putstr_fd("dup2 inpute pipe error\n", 2);
 		exit(EXIT_FAILURE);
 	}
 	close(cmd->fd[0]);
 	if (dup2(outfile, STDOUT_FILENO) == -1)
 	{
-		ft_putstr_fd("dup2 inpute pipe error", 2);
+		ft_putstr_fd("dup2 inpute pipe error\n", 2);
 		exit(EXIT_FAILURE);
 	}
 	close(outfile);
@@ -90,17 +92,19 @@ void	second_child(t_cmd *cmd)
 	char	**commande;
 
 	close(cmd->fd[1]);
+	child2_of(cmd);
 	commande = ft_split(cmd->av[3], ' ');
 	file = get_cmd(cmd, commande[0]);
 	if (!commande || !file)
 	{
 		free_tab(commande);
+		free(file);
 		close(cmd->fd[0]);
 		exit(EXIT_FAILURE);
 	}
-	child2_of(cmd);
 	execve(file, commande, cmd->env);
-	perror("Execve Failure2");
+	perror("execve failure");
+	ft_putstr_fd("Command not found", 2);
 	free(file);
 	free_tab(commande);
 	exit(EXIT_FAILURE);

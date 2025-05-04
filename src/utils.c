@@ -6,7 +6,7 @@
 /*   By: ifadhli <ifadhli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 16:38:03 by ifadhli           #+#    #+#             */
-/*   Updated: 2025/05/03 19:08:26 by ifadhli          ###   ########.fr       */
+/*   Updated: 2025/05/05 00:41:17 by ifadhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,17 @@ void	free_tab(char **str)
 		i++;
 	}
 	free(str);
+}
+
+t_cmd	init(int ac, char **av, char **env)
+{
+	t_cmd	cmd;
+
+	cmd.env = env;
+	cmd.av = av;
+	cmd.pathname = NULL;
+	cmd.infile = av[1];
+	cmd.outfile = av[ac - 1];
+	cmd.len = ac - 3;
+	return (cmd);
 }
