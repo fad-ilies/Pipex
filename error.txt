@@ -1,2 +1,0 @@
-gerer les chemins absolus et relatif, si '/' se trouve dans la cmd, ne pas strjoin avec PATH
-
