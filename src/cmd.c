@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   v1.c                                               :+:      :+:    :+:   */
+/*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ifadhli <ifadhli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/28 16:36:22 by ifadhli           #+#    #+#             */
-/*   Updated: 2025/05/04 00:56:06 by ifadhli          ###   ########.fr       */
+/*   Created: 2025/05/06 00:57:06 by ifadhli           #+#    #+#             */
+/*   Updated: 2025/05/06 01:50:39 by ifadhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-char	**get_path(t_cmd *cmd)
+char	**path_check(t_cmd *cmd)
 {
 	int		i;
 	char	*path;
@@ -37,7 +37,7 @@ char	**get_path(t_cmd *cmd)
 	return (tab);
 }
 
-char	*get_cmd(t_cmd *cmd, char *s)
+char	*cmd_check(t_cmd *cmd, char *s)
 {
 	int		i;
 	int		j;
@@ -45,11 +45,12 @@ char	*get_cmd(t_cmd *cmd, char *s)
 	char	*path;
 
 	i = 1;
-	env_path = get_path(cmd);
+	env_path = path_check(cmd);
 	if (!env_path || !*env_path)
-		return (ft_putstr_fd("PATH not found\n", STDERR_FILENO), NULL);
+		return (ft_putstr_fd("Path absent\n", 2), NULL);
 	if (!s || !*s)
-		return (free_tab(env_path), ft_putstr_fd("Command not found\n", STDERR_FILENO), NULL);
+		return (free_tab(env_path), ft_putstr_fd("Commande inexistante\n", 2),
+			NULL);
 	j = 0;
 	while (env_path[j])
 	{
